@@ -5,10 +5,8 @@
 
 void Initialize();
 void LoadContent();
-void Draw();
+void Draw(sf::RenderWindow &window);
 void Update(sf::Time deltaTime);
-
-void ManageClosing();
 
 #endif // MAIN
 
