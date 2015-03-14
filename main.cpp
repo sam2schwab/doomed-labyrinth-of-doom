@@ -6,12 +6,8 @@
 
 
 
-int main(int argc, char *argv[])
+int main()
 {
-    sf::Vector2i screenDimensions(800,600);
-    sf::RenderWindow window(sf::VideoMode(screenDimensions.x, screenDimensions.y), "Doomed Labyrinth of Doom");
-    window.setFramerateLimit(60);
-
     LoadContent();
     Initialize();
 
@@ -20,14 +16,7 @@ int main(int argc, char *argv[])
 
     while (window.isOpen())
     {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-            //if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
-                //window.close();
-        }
+        ManageClosing();
 
         //restart the clock and keep the elapsed time stored in frameTime variable
         sf::Time frameTime = frameClock.restart();
@@ -36,14 +25,31 @@ int main(int argc, char *argv[])
         Update(frameTime);
 
         // draw game components
-        Draw(window);
+        Draw();
     }
 
     return 0;
 }
 
+void ManageClosing()
+{
+    sf::Event event;
+    while (window.pollEvent(event))
+    {
+        if (event.type == sf::Event::Closed)
+            window.close();
+        //if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+            //window.close();
+    }
+}
+
 void Initialize()
 {
+    // setup window
+    sf::Vector2i screenDimensions(800,600);
+    sf::RenderWindow window(sf::VideoMode(screenDimensions.x, screenDimensions.y), "Doomed Labyrinth of Doom");
+    window.setFramerateLimit(60);
+
     //Create game components here
 
 }
@@ -60,7 +66,7 @@ void Update(sf::Time deltaTime)
 
 }
 
-void Draw(sf::RenderWindow &window)
+void Draw()
 {
     window.clear();
     //Draw game components here
