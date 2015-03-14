@@ -28,21 +28,30 @@ int Game::exec()
         update(frameTime);
 
         // draw game components
-        draw(window);
+        draw();
     }
 
     return 0;
+}
+
+void Game::loadContent()
+{
+    //Load ressources here
+
+    //ressources for labyrinth
+    wallTexture.loadFromFile("wall.png");
+    wallTexture.setSmooth(true);
+    pathTexture.loadFromFile("path.png");
+    pathTexture.setSmooth(true);
+
 }
 
 void Game::initialize()
 {
     //Create game components here
 
-}
-
-void Game::loadContent()
-{
-    //Load ressources here
+    //initializing labyrinth
+    maze.initialize(15,15,wallTexture,pathTexture);
 
 }
 
@@ -50,13 +59,18 @@ void Game::update(sf::Time deltaTime)
 {
     //Update game components here
 
+    //updating labyrinth
+    maze.update(deltaTime);
 }
 
-void Game::draw(sf::RenderWindow &window)
+void Game::draw()
 {
     window.clear(sf::Color::Cyan);
     //Draw game components here
     //example: window.draw(componentName);
+
+    //drawing labyrinth
+    window.draw(maze);
 
     window.display();
 }
