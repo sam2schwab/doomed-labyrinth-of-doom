@@ -54,7 +54,7 @@ void Game::update(sf::Time deltaTime)
 
 void Game::draw(sf::RenderWindow &window)
 {
-    window.clear();
+    window.clear(sf::Color::Cyan);
     //Draw game components here
     //example: window.draw(componentName);
 
