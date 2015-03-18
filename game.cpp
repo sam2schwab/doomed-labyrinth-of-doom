@@ -1,4 +1,5 @@
 #include "game.h"
+#include <qdebug.h>
 
 Game::Game()
     : screenDimensions(800,600),
@@ -20,7 +21,7 @@ int Game::exec()
 
     while (window.isOpen())
     {
-        manageClosing();
+        manageEvents();
 
         //restart the clock and keep the elapsed time stored in frameTime variable
         sf::Time frameTime = frameClock.restart();
@@ -75,13 +76,20 @@ void Game::draw()
     window.display();
 }
 
-void Game::manageClosing(){
+void Game::manageEvents()
+{
     sf::Event event;
     while (window.pollEvent(event))
     {
         if (event.type == sf::Event::Closed)
             window.close();
-        //if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
-            //window.close();
+        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Up)
+            maze.move(Maze::UP);
+        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Right)
+            maze.move(Maze::RIGHT);
+        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Down)
+            maze.move(Maze::DOWN);
+        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Left)
+            maze.move(Maze::LEFT);
     }
 }

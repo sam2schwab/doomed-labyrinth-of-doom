@@ -26,7 +26,7 @@ private:
     void draw();
     void update(sf::Time deltaTime);
 
-    void manageClosing();
+    void manageEvents();
 };
 
 #endif // GAME_H

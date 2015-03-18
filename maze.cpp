@@ -1,7 +1,12 @@
 #include "maze.h"
+#include <qdebug.h>
+
+const float Maze::SCALE = 0.125;
+const float Maze::SPEED = 15;
 
 Maze::Maze(sf::RenderWindow &_window)
-    : window(&_window)
+    : window(&_window),
+      isMoving(false)
 {
 
 }
@@ -9,6 +14,49 @@ Maze::Maze(sf::RenderWindow &_window)
 Maze::~Maze()
 {
 
+}
+
+void Maze::move(int int_dir)
+{
+    if(!isMoving)
+    {
+        switch(int_dir)
+        {
+        case UP:
+            dir = sf::Vector2i(0,-1);
+            qDebug() << "trying to move up";
+            break;
+        case DOWN:
+            dir = sf::Vector2i(0,1);
+            qDebug() << "trying to move down";
+            break;
+        case LEFT:
+            dir = sf::Vector2i(-1,0);
+            qDebug() << "trying to move left";
+            break;
+        case RIGHT:
+            dir = sf::Vector2i(1,0);
+            qDebug() << "trying to move right";
+            break;
+        }
+        sf::Vector2i temp = currentPos + dir;
+        sf::Vector2i test90;
+        sf::Vector2i test270;
+        while(!(temp.x < 0 || temp.y < 0 || spriteArray[temp.x][temp.y]->getTexture() == &wallTexture))
+        {
+            qDebug() << "can move in that direction!";
+            isMoving = true;
+            currentPos = temp;
+            temp = currentPos + dir;
+            test90 = currentPos + sf::Vector2i(dir.y,dir.x);
+            test270 = currentPos + sf::Vector2i(-dir.y,-dir.x);
+            if(spriteArray[test90.x][test90.y]->getTexture() == &pathTexture ||
+               spriteArray[test270.x][test270.y]->getTexture() == &pathTexture)
+                break;
+        }
+    }
+    else
+        qDebug() << "cannot move, already moving";
 }
 
 void Maze::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -32,12 +80,16 @@ void Maze::initialize(int _width,int _height, sf::Texture _wall, sf::Texture _pa
 
     srand((unsigned)time(NULL));
     int index = 0;
-    int backtrack_x[CELL];
-    int backtrack_y[CELL];
+    int* backtrack_x = new int[CELL];
+    int* backtrack_y = new int[CELL];
     init_array();
     backtrack_x[index] = 1;
     backtrack_y[index] = 1;
     maze_generator(index, backtrack_x, backtrack_y, 1, 1, 1);
+    currentPos = sf::Vector2i(1,0);
+
+	delete[] backtrack_x;
+	delete[] backtrack_y;
 }
 
 void Maze::init_array()
@@ -160,5 +212,38 @@ int Maze::is_closed(int x, int y)
 
 void Maze::update(sf::Time deltaTime)
 {
-
+    if(isMoving)
+    {
+        if(abs((spriteArray[currentPos.x][currentPos.y]->getPosition().x + wallTexture.getSize().x*SCALE*0.5) - window->getSize().x/2) > SPEED*SCALE ||
+           abs((spriteArray[currentPos.x][currentPos.y]->getPosition().y + wallTexture.getSize().y*SCALE*0.5) - window->getSize().y/2) > SPEED*SCALE)
+        {
+            for(int colonne = 0; colonne < width*2+1; colonne++)
+            {
+                for(int ligne = 0; ligne < height*2+1; ligne++)
+                {
+                    spriteArray[colonne][ligne]->setPosition(spriteArray[colonne][ligne]->getPosition().x - SPEED*SCALE*dir.x,
+                                                             spriteArray[colonne][ligne]->getPosition().y - SPEED*SCALE*dir.y);
+                }
+            }
+        }
+        else if (int((spriteArray[currentPos.x][currentPos.y]->getPosition().x + wallTexture.getSize().x*SCALE*0.5) - window->getSize().x/2) == 0 &&
+                 int((spriteArray[currentPos.x][currentPos.y]->getPosition().y + wallTexture.getSize().y*SCALE*0.5) - window->getSize().y/2) == 0)
+        {
+            qDebug() << "stopped moving";
+            isMoving = false;
+        }
+        else
+        {
+            int x_offset = (spriteArray[currentPos.x][currentPos.y]->getPosition().x + wallTexture.getSize().x*SCALE*0.5) - window->getSize().x/2;
+            int y_offset = (spriteArray[currentPos.x][currentPos.y]->getPosition().y + wallTexture.getSize().y*SCALE*0.5) - window->getSize().y/2;
+            for(int colonne = 0; colonne < width*2+1; colonne++)
+            {
+                for(int ligne = 0; ligne < height*2+1; ligne++)
+                {
+                    spriteArray[colonne][ligne]->setPosition(spriteArray[colonne][ligne]->getPosition().x - x_offset,
+                                                             spriteArray[colonne][ligne]->getPosition().y - y_offset);
+                }
+            }
+        }
+    }
 }
