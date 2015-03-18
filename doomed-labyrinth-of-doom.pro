@@ -18,11 +18,17 @@ CONFIG(debug, debug|release): LIBS += -lsfml-audio-d -lsfml-graphics-d -lsfml-ma
 
 SOURCES += main.cpp \
     game.cpp \
-    maze.cpp
+    maze.cpp \
+    animation.cpp \
+    animatedsprite.cpp \
+    player.cpp
 
 HEADERS  += \
     game.h \
-    maze.h
+    maze.h \
+    animation.h \
+    animatedsprite.h \
+    player.h
 
 INCLUDEPATH += ./SFML/include
 DEPENDPATH += ./SFML/include

@@ -3,8 +3,9 @@
 
 Game::Game()
     : screenDimensions(800,600),
-      window(sf::VideoMode(screenDimensions.x, screenDimensions.y), "Doomed Labyrinth of Doom"),
-      maze(window)
+      window(sf::VideoMode(screenDimensions.x, screenDimensions.y), "Doomed Labyrinth of Doom"/*, sf::Style::Fullscreen*/),
+      maze(window),
+      player(window,sf::seconds(0.2))
 {
     window.setFramerateLimit(60);
 }
@@ -45,6 +46,10 @@ void Game::loadContent()
     wallTexture.setSmooth(true);
     pathTexture.loadFromFile("path.png");
     pathTexture.setSmooth(true);
+
+    //ressources for player
+    playerTexture.loadFromFile("player.png");
+    playerTexture.setSmooth(true);
 }
 
 void Game::initialize()
@@ -54,6 +59,8 @@ void Game::initialize()
     //initializing labyrinth
     maze.initialize(20,15,wallTexture,pathTexture);
 
+    //initializing player
+    player.initialize(playerTexture, maze.getMoving());
 }
 
 void Game::update(sf::Time deltaTime)
@@ -62,16 +69,22 @@ void Game::update(sf::Time deltaTime)
 
     //updating labyrinth
     maze.update(deltaTime);
+
+    //updating player
+    player.update(deltaTime);
 }
 
 void Game::draw()
 {
-    window.clear(sf::Color::Cyan);
+    window.clear(sf::Color::Black);
     //Draw game components here
     //example: window.draw(componentName);
 
     //drawing labyrinth
     window.draw(maze);
+
+    //drawing player
+    window.draw(player);
 
     window.display();
 }
@@ -84,12 +97,24 @@ void Game::manageEvents()
         if (event.type == sf::Event::Closed)
             window.close();
         if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Up)
+        {
+            player.move(Player::UP);
             maze.move(Maze::UP);
+        }
         if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Right)
+        {
+            player.move(Player::RIGHT);
             maze.move(Maze::RIGHT);
+        }
         if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Down)
+        {
+            player.move(Player::DOWN);
             maze.move(Maze::DOWN);
+        }
         if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Left)
+        {
+            player.move(Player::LEFT);
             maze.move(Maze::LEFT);
+        }
     }
 }

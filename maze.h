@@ -12,6 +12,7 @@ public:
     void initialize(int width,int height, sf::Texture wall, sf::Texture path);
     void update(sf::Time deltaTime);
     void move(int int_dir);
+    bool* getMoving();
 
     static const int UP = 0;
     static const int RIGHT = 1;

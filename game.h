@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "maze.h"
+#include "player.h"
 
 class Game
 {
@@ -20,6 +21,10 @@ private:
     sf::Texture wallTexture;
     sf::Texture pathTexture;
     Maze maze;
+
+    //members for player
+    sf::Texture playerTexture;
+    Player player;
 
     void initialize();
     void loadContent();

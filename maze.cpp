@@ -1,7 +1,7 @@
 #include "maze.h"
 #include <qdebug.h>
 
-const float Maze::SCALE = 0.125;
+const float Maze::SCALE = 0.17;
 const float Maze::SPEED = 15;
 
 Maze::Maze(sf::RenderWindow &_window)
@@ -14,6 +14,11 @@ Maze::Maze(sf::RenderWindow &_window)
 Maze::~Maze()
 {
 
+}
+
+bool *Maze::getMoving()
+{
+    return &isMoving;
 }
 
 void Maze::move(int int_dir)
