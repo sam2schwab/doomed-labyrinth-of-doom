@@ -43,7 +43,6 @@ void Game::loadContent()
     wallTexture.setSmooth(true);
     pathTexture.loadFromFile("path.png");
     pathTexture.setSmooth(true);
-
 }
 
 void Game::initialize()
@@ -51,7 +50,7 @@ void Game::initialize()
     //Create game components here
 
     //initializing labyrinth
-    maze.initialize(15,15,wallTexture,pathTexture);
+    maze.initialize(20,15,wallTexture,pathTexture);
 
 }
 
