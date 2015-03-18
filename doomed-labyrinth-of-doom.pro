@@ -22,7 +22,6 @@ SOURCES += main.cpp \
 
 HEADERS  += \
     game.h \
-    mazegen.h \
     maze.h
 
 INCLUDEPATH += ./SFML/include

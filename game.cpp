@@ -2,7 +2,8 @@
 
 Game::Game()
     : screenDimensions(800,600),
-      window(sf::VideoMode(screenDimensions.x, screenDimensions.y), "Doomed Labyrinth of Doom")
+      window(sf::VideoMode(screenDimensions.x, screenDimensions.y), "Doomed Labyrinth of Doom"),
+      maze(window)
 {
     window.setFramerateLimit(60);
 }

@@ -1,6 +1,7 @@
 #include "maze.h"
 
-Maze::Maze()
+Maze::Maze(sf::RenderWindow &_window)
+    : window(&_window)
 {
 
 }
@@ -12,7 +13,13 @@ Maze::~Maze()
 
 void Maze::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-
+    for(int colonne = 0; colonne < width*2+1; colonne++)
+    {
+        for(int ligne = 0; ligne < height*2+1; ligne++)
+        {
+            target.draw(*spriteArray[colonne][ligne], states);
+        }
+    }
 }
 
 void Maze::initialize(int _width,int _height, sf::Texture _wall, sf::Texture _path)
@@ -35,6 +42,9 @@ void Maze::initialize(int _width,int _height, sf::Texture _wall, sf::Texture _pa
 
 void Maze::init_array()
 {
+    int x_offset = window->getSize().x/2 - wallTexture.getSize().x*SCALE*1.5;
+    int y_offset = window->getSize().y/2 - wallTexture.getSize().y*SCALE*0.5;
+
     spriteArray = std::vector<std::vector<sf::Sprite*> >(width*2+1);
 
     for(int colonne = 0; colonne < width*2+1; colonne++)
@@ -43,8 +53,8 @@ void Maze::init_array()
         for(int ligne = 0; ligne < height*2+1; ligne++)
         {
             spriteArray[colonne][ligne] = new sf::Sprite();
-            spriteArray[colonne][ligne]->setScale(0.125f,0.125f);
-            spriteArray[colonne][ligne]->setPosition(wallTexture.getSize().x*colonne,wallTexture.getSize().y*ligne);
+            spriteArray[colonne][ligne]->setScale(SCALE,SCALE);
+            spriteArray[colonne][ligne]->setPosition(x_offset+(wallTexture.getSize().x*SCALE*colonne),y_offset+(wallTexture.getSize().y*SCALE*ligne));
             if(colonne % 2 == 0 || ligne % 2 == 0)
                 spriteArray[colonne][ligne]->setTexture(wallTexture);
             else
